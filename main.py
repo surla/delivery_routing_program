@@ -1,33 +1,30 @@
-# This is a sample Python script.
-
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
 import utils.csv_reader as  csv_reader
 from models.Package import Package
-
-packages = []
-distances = []
+from utils.hash_table import HashTable
 
 
-def load_data():
+packages = HashTable()
+distances = HashTable()
+
+
+def get_packages():
     data = csv_reader.get_data('./data/package.csv')
 
     # Loads all instances of package into global variable packages
     for item in data:
         new_package = Package(item[0], item[1], item[2], item[3], item[4], item[5], item[6], item[7])
-        packages.append(new_package)
+        packages.add(item[0], new_package) # Key is package_id
 
 
-
-
-
-
+def get_distances():
+    data = csv_reader.get_data('./data/distance.csv')
 
 
 def start():
     print("-------- Welcome to Package Delivery System --------")
 
-    load_data()
+    get_packages()
+    get_distances()
 
 
 def print_hi(name):
@@ -41,4 +38,3 @@ if __name__ == '__main__':
 
 start()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/

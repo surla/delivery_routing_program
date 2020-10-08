@@ -1,30 +1,29 @@
 class HashTable:
     def __init__(self):
         self.size = 40
-        self.arr = [[] for i in range(self.size)]
+        self.arr = [[] for _ in range(self.size)]
 
     def get_hash(self, key):
-        h = 0
+        index = 0
         for char in str(key):
-            h += ord(char)
-        return h % self.size
+            index += ord(char)
+        return index % self.size
 
     # Adds items to hash table
-    def __setitem__(self, key, value):
-        h = self.get_hash(key)
-        found = False
-        for index, element in enumerate(self. arr[h]):
-            if len(element) == 2 and element[0] == key:
-                self.arr[h][index] = (key, value)
+    def add(self, key, value):
+        index = self.get_hash(key)
+        found = False;
+        kvp = (key, value)
+        for i, item in enumerate(self.arr[index]):
+            if len(item) == 2 and item[0] == key:
+                self.arr[index][i] = kvp
                 found = True
                 break
         if not found:
-            self.arr[h].append((key, value))
-        self.arr[h] = value
+            self.arr[index].append(kvp)
 
-    def __getitem__(self, key):
-        h = self.get_hash(key)
-        for element in self.arr[h]:
-            if element[0] == key:
-                return element[1]
-
+    def get(self, key):
+        index = self.get_hash(key)
+        for item in self.arr[index]:
+            if item[0] == str(key):
+                return item[1]

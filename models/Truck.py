@@ -5,3 +5,4 @@ class Truck:
         self.distance = 0
         self.max_capacity = 16  # Maximum load per truck is 16 packages
         self.speed_mph = 18  # Average speed per truck is 18 mph
+
