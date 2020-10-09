@@ -27,3 +27,9 @@ class HashTable:
         for item in self.arr[index]:
             if item[0] == str(key):
                 return item[1]
+
+    def __getitem__(self, key):
+        index = self.get_hash(key)
+        for item in self.arr[index]:
+            if item[0] == str(key):
+                return item[1]
