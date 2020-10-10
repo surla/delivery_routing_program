@@ -12,7 +12,7 @@ early_deliveries = [1, 6, 13, 14, 15, 16, 20, 25, 29, 30, 31, 34, 37, 40]
 
 
 def get_packages():
-    data = csv_reader.get_data('package.csv')
+    data = csv_reader.get_data('data/package.csv')
 
     # Loads all instances of package into global variable packages
     for item in data:
@@ -31,31 +31,20 @@ def get_distances():
     # print(distances['6351 South 900 East'][8])  # this will get distances using [current_location][index of destination]
     # print(destinations)
 
-#  def set_destinations():
-# def delivery_package():
-#     location = 1  # sets current location to HUB
-#     address = packages.get(1).address
-#     print("Address: " + address)
-#
-#     for distance in distances:
-#         destinations.append(distance[0])
-#
-#     print(destinations)
-
 
 def delivery(group):
-    location = 1  # sets current location to HUB
+    location = 'HUB'  # sets current location to HUB
     truck = Truck()
-    location = 1  # Sets location to HUB
 
     for i in group:
         truck.load_package(packages.get(i))
 
     # Get index of destination
     for item in truck.load:
-        delivery_address = item.address
-        print(distances[delivery_address][location])
-        location = destinations.index(item.address)
+        address = item.address
+        delivery_address = destinations.index(address)
+        print(distances[location][delivery_address])  # Gets distances between current location and devlivery address
+        location = address  # Sets location to address afer
 
 
 def start():
