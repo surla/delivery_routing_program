@@ -28,23 +28,41 @@ def get_distances():
         destinations.append(address)  # Used to look up distances during delivery.
         distances.add(address, item)  # Adds address as key and distances as value
 
-    # print(distances['6351 South 900 East'][8])  # this will get distances using [current_location][index of destination]
+    # print(distances['6351 South 900 East'][8])  # this will get distances between locations
     # print(destinations)
 
 
+# Method will load packages and get delivery distances
 def delivery(group):
-    location = 'HUB'  # sets current location to HUB
+    num = [1,2,3,4,5,6]
+      # sets current location to HUB
     truck = Truck()
+    location = truck.location
 
     for i in group:
         truck.load_package(packages.get(i))
 
     # Get index of destination
     for item in truck.load:
+
         address = item.address
         delivery_address = destinations.index(address)
-        print(distances[location][delivery_address])  # Gets distances between current location and devlivery address
-        location = address  # Sets location to address afer
+
+        # Change truck distance and package status for delivery
+        truck.distance += float(distances[location][delivery_address])  # Updates truck distance after delivery
+        item.status = 'Delivered'  # Set status to delivered after delivery
+        print(item.status)
+        print(distances[location][delivery_address])  # Gets distances between current location and delivery address
+        location = address  # Sets location to address destination
+
+    truck.load.clear()  # Truck finishes delivery clear load
+    # Truck goes to 'HUB' after last package delivery
+    truck.distance += float(distances[location][1])
+    truck.location = 'HUB'
+
+    print(len(truck.load))
+    print(truck.location)
+    print(truck.distance)
 
 
 def start():
