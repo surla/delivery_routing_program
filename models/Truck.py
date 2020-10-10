@@ -9,5 +9,3 @@ class Truck:
 
     def load_package(self, package):
         self.load.append(package)
-
-

@@ -9,7 +9,7 @@ all_distances = HashTable()  # Hash table of all packages in distance.csv
 all_destinations = []  # List of all addresses of delivery destinations
 
 early_deliveries = [1, 2, 4, 13, 14, 15, 16, 19, 20, 21, 29, 30, 31, 34, 37, 40]
-truck_2 =[3, 5, 6, 7, 8, 9, 10, 11, 12, 17, 18, 25, 28, 32, 36, 38]
+truck_2 = [3, 5, 6, 7, 8, 9, 10, 11, 12, 17, 18, 25, 28, 32, 36, 38]
 left_over = [22, 23, 24, 26, 27, 33, 35, 39]
 
 
@@ -30,47 +30,57 @@ def get_distances():
         all_destinations.append(address)  # Used to look up distances during delivery.
         all_distances.add(address, item)  # Adds address as key and distances as value
 
-    # print(distances['6351 South 900 East'][8])  # this will get distances between locations
-    # print(destinations)
-
 
 #  Bubble Sort as greedy algorithm to get packages in order from closest to farthest
-def sort_packages(arr):
-    n = len(arr)
+# def sort_packages(arr):
+#     n = len(arr)
+#
+#     for i in range(n):
+#         for j in range(0, n-1):
+#             if float(all_distances[all_packages.get(arr[j]).address][1]) > float(all_distances[all_packages.get(arr[j+1]).address][1]):
+#                 arr[j], arr[j+1] = arr[j+1], arr[j]
+#
+#     return arr
 
-    for i in range(n):
-        for j in range(0, n-1):
-            if float(all_distances[all_packages.get(arr[j]).address][1]) > float(all_distances[all_packages.get(arr[j+1]).address][1]):
-                arr[j], arr[j+1] = arr[j+1], arr[j]
+# Method uses Greedy algorithm to find next pack that is the closet to the current location of the truck.
+def next_package(truck_location, truck_load):
+    next_nearest = 100
+    new_package = None
 
-    return arr
+    # Last package will be returned
+    if len(truck_load) == 1:
+        return truck_load[0]
+
+    for item in truck_load:
+        address = item.address
+        delivery_address = all_destinations.index(address)
+
+        if float(all_distances[truck_location][delivery_address]) < next_nearest:
+            next_nearest = float(all_distances[truck_location][delivery_address])
+            new_package = item
+
+    return new_package
 
 
 # Method will load packages and get delivery distances
 def delivery(truck, group):
-    # sets current location to HUB
-    location = truck.location
+    load = truck.load
 
-    sorted = sort_packages(group)
-
-    for i in sorted:
+    for i in group:
         truck.load_package(all_packages.get(i))
-        print(all_distances[all_packages.get(i).address][1])
 
-    # Get index of destination
-    for item in truck.load:
+    while load:
+        package = next_package(truck.location, load)
 
-        address = item.address
-        delivery_address = all_destinations.index(address)
-        # Change truck distance and package status for delivery
-        truck.distance += float(all_distances[location][delivery_address])  # Updates truck distance after delivery
-        item.status = 'Delivered'  # Set status to delivered after delivery
-        location = address  # Sets location to address destination
+        truck.distance += float(all_distances[truck.location][all_destinations.index(package.address)])
+        package.status = 'Delivered'
+        truck.location = package.address
+        truck.load.remove(package)
 
-    truck.load.clear()  # Truck finishes delivery clear load
-    # Truck goes to 'HUB' after last package delivery
-    truck.distance += float(all_distances[location][1])
-    truck.location = 'HUB'
+    # Checks if truck load is empty and goes back to 'HUB'
+    if not truck.load:
+        truck.distance += float(all_distances[truck.location][1])
+        truck.location = 'HUB'
 
 
 def start():
