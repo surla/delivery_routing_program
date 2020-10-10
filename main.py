@@ -1,4 +1,4 @@
-import utils.csv_reader as  csv_reader
+import utils.csv_reader as csv_reader
 from models.Package import Package
 from models.Truck import Truck
 from utils.hash_table import HashTable
@@ -8,9 +8,11 @@ packages = HashTable()  # Hash table of all packages in package.csv
 distances = HashTable()  # Hash table of all packages in distance.csv
 destinations = []  # List of all addresses of delivery destinations
 
+early_deliveries = [1, 6, 13, 14, 15, 16, 20, 25, 29, 30, 31, 34, 37, 40]
+
 
 def get_packages():
-    data = csv_reader.get_data('./data/package.csv')
+    data = csv_reader.get_data('package.csv')
 
     # Loads all instances of package into global variable packages
     for item in data:
@@ -19,15 +21,15 @@ def get_packages():
 
 
 def get_distances():
-    data = csv_reader.get_data('./data/distance.csv')
+    data = csv_reader.get_data('data/distance.csv')
 
     for item in data:
         address = item[0]  # Variable for address
         destinations.append(address)  # Used to look up distances during delivery.
         distances.add(address, item)  # Adds address as key and distances as value
 
-    print(distances['6351 South 900 East'][8])  # this will get distances using [current_location][index of destination]
-    print(destinations)
+    # print(distances['6351 South 900 East'][8])  # this will get distances using [current_location][index of destination]
+    # print(destinations)
 
 #  def set_destinations():
 # def delivery_package():
@@ -41,23 +43,27 @@ def get_distances():
 #     print(destinations)
 
 
+def delivery(group):
+    location = 1  # sets current location to HUB
+    truck = Truck()
+    location = 1  # Sets location to HUB
+
+    for i in group:
+        truck.load_package(packages.get(i))
+
+    # Get index of destination
+    for item in truck.load:
+        delivery_address = item.address
+        print(distances[delivery_address][location])
+        location = destinations.index(item.address)
+
+
 def start():
     print("-------- Welcome to Package Delivery System --------")
 
     get_packages()
     get_distances()
-
-    truck = Truck()
-
-    deliver = [2, 3, 4, 5]
-
-    for i in deliver:
-        truck.load_truck(packages.get(i))
-
-    truck_load = truck.load
-
-    # for load in truck_load:
-    #     print(load.address)
+    delivery(early_deliveries)
 
 
 def print_hi(name):
