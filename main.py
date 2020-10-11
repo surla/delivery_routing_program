@@ -93,12 +93,14 @@ def delivery(truck, group):
 
 
 # Check delivery status of package. If delivery time is before time entered, package status changes to 'Delivered'
-def delivery_status(time, val2 = None):
+def delivery_status(time, time2):
     for item in delivered_packages:
         date_time = datetime.strptime(item.delivery_time, '%H:%M').time()
 
-        if date_time < datetime.strptime(time, '%H:%M').time():
+        if date_time < datetime.strptime(time2, '%H:%M').time():
             item.status = 'Delivered at ' + item.delivery_time
+        else:
+            item.status = 'En route'
 
 
 # O(1)
@@ -112,12 +114,14 @@ def user_interface():
         print('3 - Exit program')
         val = input('\nEnter menu number: ')
         if val == '1':
-            time = input('\nEnter time in format HH:MM to check all stauts of all packages: ')
+            print('\n-- Check status of all packages between two time (Use format HH:MM in 24 hour time) --')
 
-            print('\n---------- Status of all packages at ' + time + ' ----------')
+            time = input('Enter beginning time: ')
+            time2 = input('Enter end time: ')
+            print('\n---------- Status of all packages between ' + time + ' and ' + time2 + '----------')
             print('{: <15} {: <45} {: <25} {: <20} {: <15} {: <15} {: <15}'.format('Package ID', 'Address', 'City', 'Zip Code', 'Weight', 'Deadline', 'Delivery Status'))
             for item in delivered_packages:
-                delivery_status(time)
+                delivery_status(time, time2)
                 print('{: <15} {: <45} {: <20} {: >10} {: >18} {: >20} {: >25}'.format(item.package_id, item.address, item.city, item.zip_code, item.weight, item.deadline, item.status))
 
         if val == '2':

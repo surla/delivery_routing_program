@@ -25,7 +25,4 @@ class Time:
             self.minute -= 60
             self.hour += 1
 
-        if self.hour > 12:
-            self.hour = 1
-
         return self.hour, self.minute
