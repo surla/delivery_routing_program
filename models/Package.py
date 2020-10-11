@@ -1,3 +1,5 @@
+# Package class will store instances of packages that need to be delivered.
+# Package data is obtained from data/package.csv
 class Package:
 
     def __init__(self, package_id, address, city, state, zip_code, deadline, weight, notes = 'none', status = 'At hub'):

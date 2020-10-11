@@ -11,13 +11,14 @@ all_packages = HashTable()  # Hash table to load all packages in package.csv
 all_distances = HashTable()  # Hash table to load all packages in distance.csv
 all_destinations = []  # List of all addresses of delivery destinations
 
-early_deliveries = [1, 2, 4, 13, 14, 15, 16, 19, 20, 21, 29, 30, 31, 34, 37, 40]
-truck_2 = [3, 5, 6, 7, 8, 9, 10, 11, 12, 17, 18, 25, 28, 32, 36, 38]
-left_over = [22, 23, 24, 26, 27, 33, 35, 39]
+early_deliveries = [1, 2, 4, 13, 14, 15, 16, 19, 20, 21, 29, 30, 31, 34, 37, 40]  # Packages have early delivery times
+truck_2 = [3, 5, 6, 7, 8, 9, 10, 11, 12, 17, 18, 25, 28, 32, 36, 38]  # Packages with constraints
+left_over = [22, 23, 24, 26, 27, 33, 35, 39]  # Packages that are left over after loading trucks
 
-delivered_packages = []
+delivered_packages = []  # List that stores packages when delivered. Used for delivery status screen.
 
 
+# O(1)
 # Method to get all packages in package.csv. Data saved to all_packages hash table
 def get_packages():
     data = csv_reader.get_data('data/package.csv')
@@ -28,6 +29,7 @@ def get_packages():
         all_packages.add(item[0], package)  # Key is package_id
 
 
+# O(1)
 # Method to get all distances in distance.csv. Data saved to all distances hash table
 def get_distances():
     data = csv_reader.get_data('data/distance.csv')
@@ -38,12 +40,15 @@ def get_distances():
         all_distances.add(address, item)  # Adds address as key and distances as value
 
 
+# O(n)
 # Method uses Greedy algorithm to find next pack that is the closet to the current location of the truck.
+# This greedy is easy to implement and is scalable if destination distances increase.
+# Method can be change depending on the requirements, e.g, heaviest packages first.
 def next_package(truck_location, truck_load):
-    next_nearest = 50
-    new_package = None
+    next_nearest = 20  # Number is set greater than the furthest destination
+    new_package = None  # Variable will store the closet package to the current location
 
-    # Last package will be returned
+    # Returns the last package to be delivered.
     if len(truck_load) == 1:
         return truck_load[0]
 
@@ -57,7 +62,9 @@ def next_package(truck_location, truck_load):
     return new_package
 
 
+# O(n^2)
 # Method will load packages and get delivery distances
+# Used next_package() method with greedy algorithm to return the next nearest delivery destinations
 def delivery(truck, group):
     load = truck.load
     # Loads packages into truck and sets status to 'En route'
@@ -84,6 +91,7 @@ def delivery(truck, group):
         truck.distance += float(all_distances[truck.location][1])
         truck.location = 'HUB'
 
+
 # Check delivery status of package. If delivery time is before time entered, package status changes to 'Delivered'
 def delivery_status(time, val2 = None):
     for item in delivered_packages:
@@ -93,6 +101,8 @@ def delivery_status(time, val2 = None):
             item.status = 'Delivered at ' + item.delivery_time
 
 
+# O(1)
+# Method for user interface. Allows user to see delivery information and has ability to see package status and data.
 def user_interface():
     while True:
         print('\n---------- Welcome to Package Delivery System ----------')
@@ -125,6 +135,10 @@ def user_interface():
             print('***** Program exited ******')
             exit()
 
+
+# O(1)
+# Method instantiate turcks and uses packages lists as arguments for delivery() method.
+# Displays truck mile distances when running program and runs user_interface() method.
 def start():
     truck1 = Truck()
     truck2 = Truck()
@@ -141,7 +155,7 @@ def start():
     print('\n********** Delivery Information **********')
     print('Truck 1 distance traveled: ' + str(truck1.distance) + ' miles.')
     print('Truck 2 distance traveled: ' + str(round(truck2.distance, 2)) + ' miles.')
-    print('\n Total distance traveled to deliver packages is ' + str(round(truck1.distance + truck2.distance, 2)) + ' miles.')
+    print('\nTotal distance traveled to deliver packages is ' + str(round(truck1.distance + truck2.distance, 2)) + ' miles.')
 
     user_interface()
 

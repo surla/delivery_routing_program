@@ -1,9 +1,12 @@
+# Time class to track time for package deliveries
 class Time:
 
     def __init__(self, hour, minute):
         self.hour = hour
         self.minute = minute
 
+    # O(1)
+    # Method returns time as string for package delivery
     def get_time(self):
         hour = self.hour
         minute = self.minute
@@ -13,6 +16,8 @@ class Time:
 
         return str(hour) + ":" + str(minute)
 
+    # O(1)
+    # Methods updates time for trucks during delivery
     def update_time(self, minute_time):
         self.minute += minute_time
 

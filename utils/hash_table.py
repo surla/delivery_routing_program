@@ -1,15 +1,19 @@
+# Hash table data structure used to store data from csv files
 class HashTable:
     def __init__(self):
         self.size = 40
         self.arr = [[] for _ in range(self.size)]
 
+    # O(1)
+    # Creates hash t
     def get_hash(self, key):
         index = 0
         for char in str(key):
             index += ord(char)
         return index % self.size
 
-    # Adds items to hash table
+    # O(1)
+    # Adds items to hash table. Method accounts for collisions using list.
     def add(self, key, value):
         index = self.get_hash(key)
         found = False;
@@ -22,6 +26,8 @@ class HashTable:
         if not found:
             self.arr[index].append(kvp)
 
+    # O(1)
+    # Method returns item using hashed key
     def get(self, key):
         index = self.get_hash(key)
         for item in self.arr[index]:
